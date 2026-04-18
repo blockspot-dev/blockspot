@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline Internet</title>
+
+  <link rel="icon" href="/favicon.ico">
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: #ffffffcc;
+      backdrop-filter: blur(6px);
+    }
+
+    /* Logo */
+    .logo {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 0.75rem;
+      position: relative;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: absolute;
+      top: 17px;
+      left: 17px;
+      box-shadow:
+        -16px -16px 0 var(--accent),
+        16px -16px 0 var(--accent),
+        -16px 16px 0 var(--accent),
+        16px 16px 0 var(--accent);
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    header p {
+      color: var(--muted);
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .category {
+      margin-bottom: 2.5rem;
+    }
+
+    .category-title {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+      padding-left: 0.6rem;
+      font-weight: 500;
+    }
+
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .app-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 1.4rem;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    .app-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      background: #f1f5f9;
+      border-radius: 10px;
+      margin-bottom: 0.7rem;
+      border: 1px solid var(--border);
+    }
+
+    .app-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .app-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: #ffffffcc;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Offline Internet</h1>
+    <p>Your free travel internet</p>
+  </header>
+
+  <main>
+
+    <div class="category">
+      <div class="category-title">Knowledge</div>
+
+      <div class="apps">
+        <a href="http://192.168.8.211:1200/viewer#wikipedia_en_all_nopic_2026-03/User%3AThe_other_Kiwix_guy/Landing" class="app-card">
+          <div class="app-icon">📘</div>
+          <div class="app-title">Wikipedia</div>
+          <div class="app-desc">Offline encyclopedia</div>
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; Offline Travel Internet
+  </footer>
+
+</body>
+</html>

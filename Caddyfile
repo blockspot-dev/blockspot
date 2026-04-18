@@ -1,0 +1,13 @@
+http://wikipedia.home.arpa {
+    redir http://kiwix.home.arpa/viewer#wikipedia_en_all_nopic_2026-03/User%3AThe_other_Kiwix_guy/Landing 302
+}
+
+http://192.168.8.211 {
+    root * /srv
+    file_server
+}
+
+http://home.arpa {
+    root * /srv
+    file_server
+}
