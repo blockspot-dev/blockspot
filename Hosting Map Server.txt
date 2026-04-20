@@ -1,0 +1,48 @@
+Hosting Map Server
+--
+
+Overview: 
+
+To host map server, there will be 3 components:
+
+* OpenMapTiles (to get map data in .mbtiles format)
+* TileServer GL (to server the downloaded tiles)
+* MapLibre GL JS (frontend to show fancy UI)
+
+Everything runs offline via Docker.
+
+Steps:
+
+1. Download the .pbf tiles you  want from https://geofabrik.de. For New England, I am using https://download.geofabrik.de/north-america/us-northeast.html
+
+2. git clone https://github.com/openmaptiles/openmaptiles.git
+
+3. cd openmaptiles
+
+4. mkdir data
+
+5. Move downloaded .pbf into data
+
+6. Edit env
+
+
+
+
+------------------------------
+
+To get maps running locally, you'll need map data and a map server to render the data.
+
+1. Download .mbtiles data for the region you want from https://openmaptiles.org/
+
+2. Place it in your data folder (mine is C:\server\data\mapserver)
+
+3. Run the docker command
+
+docker run --rm -it -v C:\server\data\mapserver:/data -p 1300:8080 maptiler/tileserver-gl --mbtiles osm-2020-02-10-v3.11_north-america_us-northeast.mbtiles
+
+visit http://localhost:1300/ to make sure it works
+
+4. Now you can 
+
+
+

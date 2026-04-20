@@ -1,13 +1,24 @@
-http://wikipedia.home.arpa {
-    redir http://kiwix.home.arpa/viewer#wikipedia_en_all_nopic_2026-03/User%3AThe_other_Kiwix_guy/Landing 302
-}
-
 http://192.168.8.211 {
+handle /mapserver {
     root * /srv
+    rewrite * /mapserver/index.html
     file_server
 }
-
-http://home.arpa {
+handle /mapserver/ {
     root * /srv
+    rewrite * /mapserver/index.html
     file_server
+}
+handle /mapserver/* {
+    uri strip_prefix /mapserver
+    reverse_proxy mapserver:8080
+}
+    handle /kiwix/* {
+        uri strip_prefix /kiwix
+        reverse_proxy kiwix:8080
+    }
+    handle {
+        root * /srv
+        file_server
+    }
 }

@@ -26,6 +26,16 @@ services:
       - caddy_config:/config
     restart: unless-stopped
 
+  mapserver:
+    container_name: mapserver
+    image: maptiler/tileserver-gl:latest
+    ports:
+      - "1300:8080"
+    volumes:
+      - "C:/server/data/mapserver:/data"
+    command: ["--mbtiles", "osm-2020-02-10-v3.11_north-america_us-northeast.mbtiles", "--public_url", "http://192.168.8.211/mapserver/"]
+    restart: unless-stopped
+
 volumes:
   caddy_data:
   caddy_config:
