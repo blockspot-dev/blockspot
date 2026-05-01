@@ -2,16 +2,6 @@ name: blockspot
 
 services:
 
-  kiwix:
-    container_name: kiwix
-    image: ghcr.io/kiwix/kiwix-serve:latest
-    ports:
-      - "1200:8080"
-    restart: unless-stopped
-    volumes:
-      - "C:/Server/kiwix/zim:/data"
-    command: "*.zim"
-
   caddy:
     container_name: caddy
     image: caddy:latest
@@ -26,11 +16,36 @@ services:
       - caddy_config:/config
     restart: unless-stopped
 
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "127.0.0.1:8053:80/tcp"
+    environment:
+      TZ: 'America/New_York'
+      WEBPASSWORD: ''
+    volumes:
+      - pihole_data:/etc/pihole
+      - pihole_dnsmasq:/etc/dnsmasq.d
+    restart: unless-stopped
+
+  kiwix:
+    container_name: kiwix
+    image: ghcr.io/kiwix/kiwix-serve:latest
+    ports:
+      - "127.0.0.1:1200:8080"
+    restart: unless-stopped
+    volumes:
+      - "C:/Server/kiwix/zim:/data"
+    command: "*.zim"
+
   mapserver:
     container_name: mapserver
     image: maptiler/tileserver-gl:latest
     ports:
-      - "1300:8080"
+      - "127.0.0.1:1300:8080"
     volumes:
       - "C:/server/data/mapserver:/data"
     command: ["--mbtiles", "osm-2020-02-10-v3.11_north-america_us-northeast.mbtiles", "--public_url", "http://192.168.8.211/mapserver/"]
@@ -39,3 +54,5 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  pihole_data:
+  pihole_dnsmasq:

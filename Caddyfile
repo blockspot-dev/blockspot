@@ -1,18 +1,39 @@
-http://192.168.8.211 {
-handle /mapserver {
-    root * /srv
-    rewrite * /mapserver/index.html
-    file_server
-}
-handle /mapserver/ {
-    root * /srv
-    rewrite * /mapserver/index.html
-    file_server
-}
-handle /mapserver/* {
-    uri strip_prefix /mapserver
-    reverse_proxy mapserver:8080
-}
+http://192.168.8.211, http://blockspot.local {
+    # Captive portal detection - iOS
+    handle /hotspot-detect.html {
+        redir http://blockspot.local 302
+    }
+    handle /library/test/success.html {
+        redir http://blockspot.local 302
+    }
+    # Captive portal detection - Android/Chrome
+    handle /generate_204 {
+        redir http://blockspot.local 302
+    }
+    handle /gen_204 {
+        redir http://blockspot.local 302
+    }
+    # Captive portal detection - Windows
+    handle /ncsi.txt {
+        redir http://blockspot.local 302
+    }
+    handle /connecttest.txt {
+        redir http://blockspot.local 302
+    }
+    handle /mapserver {
+        root * /srv
+        rewrite * /mapserver/index.html
+        file_server
+    }
+    handle /mapserver/ {
+        root * /srv
+        rewrite * /mapserver/index.html
+        file_server
+    }
+    handle /mapserver/* {
+        uri strip_prefix /mapserver
+        reverse_proxy mapserver:8080
+    }
     handle /kiwix/* {
         uri strip_prefix /kiwix
         reverse_proxy kiwix:8080
