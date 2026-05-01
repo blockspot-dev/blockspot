@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     volumes:
       - "C:/Server/kiwix/zim:/data"
-    command: "*.zim"
+    command: --urlRootLocation=/kiwix *.zim
 
   mapserver:
     container_name: mapserver

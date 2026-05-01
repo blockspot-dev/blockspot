@@ -35,7 +35,6 @@ http://192.168.8.211, http://blockspot.local {
         reverse_proxy mapserver:8080
     }
     handle /kiwix/* {
-        uri strip_prefix /kiwix
         reverse_proxy kiwix:8080
     }
     handle {
