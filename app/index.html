@@ -1,200 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offline Internet</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" href="/favicon.ico">
+<title>BlockSpot</title>
 
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --accent: #2563eb;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-    }
+<style>
+:root {
+  --color-text-primary: #111827;
+  --color-text-secondary: #374151;
+  --color-border-tertiary: #e5e7eb;
+  --color-background-secondary: #f9fafb;
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    }
+  --radius-lg: 14px;
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+  --font-xs: 13px;
+  --font-sm: 14px;
+  --font-md: 16px;
+  --font-lg: 18px;
+  --font-xl: 22px;
+}
 
-    header {
-      padding: 2.5rem 1.5rem 2rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      background: #ffffffcc;
-      backdrop-filter: blur(6px);
-    }
+/* Base */
+body {
+  margin: 0;
+  background: #ffffff;
 
-    /* Logo */
-    .logo {
-      width: 44px;
-      height: 44px;
-      margin: 0 auto 0.75rem;
-      position: relative;
-    }
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
 
-    .dot {
-      width: 10px;
-      height: 10px;
-      background: var(--accent);
-      border-radius: 50%;
-      position: absolute;
-      top: 17px;
-      left: 17px;
-      box-shadow:
-        -16px -16px 0 var(--accent),
-        16px -16px 0 var(--accent),
-        -16px 16px 0 var(--accent),
-        16px 16px 0 var(--accent);
-    }
+  color: var(--color-text-primary);
+}
 
-    header h1 {
-      font-size: 2.4rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
+/* Container */
+.app {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 16px 0;
+}
 
-    header p {
-      color: var(--muted);
-      margin-top: 0.4rem;
-      font-size: 0.95rem;
-    }
+/* Header */
+.header {
+  text-align: center;
+  padding: 24px 16px 20px;
+}
 
-    main {
-      flex: 1;
-      padding: 2rem 1.5rem;
-      max-width: 1000px;
-      margin: 0 auto;
-      width: 100%;
-    }
+.title {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
 
-    .category {
-      margin-bottom: 2.5rem;
-    }
+.subtitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  margin-top: 6px;
+}
 
-    .category-title {
-      font-size: 1.35rem;
-      margin-bottom: 1rem;
-      color: var(--accent);
-      border-left: 3px solid var(--accent);
-      padding-left: 0.6rem;
-      font-weight: 500;
-    }
+/* Sections */
+.section {
+  padding: 0 12px;
+  margin-bottom: 18px;
+}
 
-    .apps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.2rem;
-    }
+.section-label {
+  font-size: var(--font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px 4px;
+}
 
-    .app-card {
-      background: var(--card);
-      border-radius: 14px;
-      padding: 1.4rem;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid var(--border);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
-    .app-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-    }
+/* Card link wrapper (IMPORTANT FIX) */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  outline: none;
+}
 
-    .app-icon {
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      background: #f1f5f9;
-      border-radius: 10px;
-      margin-bottom: 0.7rem;
-      border: 1px solid var(--border);
-    }
+/* Cards */
+.card {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: var(--radius-lg);
+  padding: 20px 14px;
+  text-align: center;
+  min-height: 110px;
 
-    .app-title {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 0.35rem;
-    }
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
 
-    .app-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
+/* Tap feedback */
+.card-link:active .card {
+  transform: scale(0.98);
+}
 
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-      background: #ffffffcc;
-    }
-  </style>
+/* Focus for accessibility */
+.card-link:focus-visible .card {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Medical styling (renamed from emergency) */
+.card.medical {
+  background: #f3f6ff;   /* soft cool blue */
+  border-color: #c7d2fe;
+}
+
+.card-icon {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: var(--font-md);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+
+.card-title.medical {
+  color: #1e3a8a;
+}
+
+.card-desc {
+  font-size: var(--font-sm);
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.card-desc.medical {
+  color: #334155;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  padding: 20px;
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>Offline Internet</h1>
-    <p>Your free travel internet</p>
-  </header>
+<div class="app">
 
-  <main>
+  <!-- Header -->
+  <div class="header">
+    <p class="title">BlockSpot</p>
+    <p class="subtitle">Your neighborhood offline network</p>
+  </div>
 
-<div class="category">
-      <div class="category-title">Tools</div>
+  <!-- Medical -->
+  <div class="section">
+    <p class="section-label">Medical</p>
 
-      <div class="apps">
-        <a href="http://192.168.8.211/mapserver/" class="app-card">
-          <div class="app-icon">🗺️</div>
-          <div class="app-title">Maps</div>
-          <div class="app-desc">North Eastern US</div>
-        </a>
-      </div>
+    <div class="grid">
 
-    </div>
+      <a class="card-link" href="http://blockspot.local/kiwix/viewer#medlineplus.gov_en_all_2025-01">
+        <div class="card medical">
+          <div class="card-icon">🏥</div>
+          <p class="card-title medical">MedlinePlus</p>
+          <p class="card-desc medical">Medical info</p>
+        </div>
+      </a>
 
-
-    <div class="category">
-      <div class="category-title">Knowledge</div>
-
-      <div class="apps">
-        <a href="http://192.168.8.211/kiwix/viewer#wikipedia_en_all_nopic_2026-03/User%3AThe_other_Kiwix_guy/Landing" class="app-card">
-          <div class="app-icon">📘</div>
-          <div class="app-title">Wikipedia</div>
-          <div class="app-desc">English Wikipedia</div>
-        </a>
-      </div>
+      <a class="card-link" href="http://blockspot.local/kiwix/viewer#wikipedia_en_medicine_maxi_2026-04">
+        <div class="card medical">
+          <div class="card-icon">💊</div>
+          <p class="card-title medical">WikiMed</p>
+          <p class="card-desc medical">Medical reference</p>
+        </div>
+      </a>
 
     </div>
+  </div>
 
+  <!-- Knowledge -->
+  <div class="section">
+    <p class="section-label">Knowledge</p>
 
+    <div class="grid">
 
+      <a class="card-link" href="http://blockspot.local/kiwix/viewer#wikipedia_en_all_maxi_2026-02">
+        <div class="card">
+          <div class="card-icon">📖</div>
+          <p class="card-title">Wikipedia</p>
+          <p class="card-desc">Full encyclopedia</p>
+        </div>
+      </a>
 
-  </main>
+      <a class="card-link" href="http://blockspot.local/kiwix/viewer#wikivoyage_en_all_maxi_2026-03">
+        <div class="card">
+          <div class="card-icon">✈️</div>
+          <p class="card-title">Wikivoyage</p>
+          <p class="card-desc">Travel guides</p>
+        </div>
+      </a>
 
-  <footer>
-    &copy; Offline Travel Internet
-  </footer>
+    </div>
+  </div>
+
+  <!-- Tools -->
+  <div class="section">
+    <p class="section-label">Tools</p>
+
+    <div class="grid">
+
+      <a class="card-link" href="http://blockspot.local/mapserver/">
+        <div class="card">
+          <div class="card-icon">📍</div>
+          <p class="card-title">Maps</p>
+          <p class="card-desc">Northeast US</p>
+        </div>
+      </a>
+
+      <a class="card-link" href="http://blockspot.local/kiwix/viewer#ifixit_en_all_2025-12">
+        <div class="card">
+          <div class="card-icon">🔧</div>
+          <p class="card-title">iFixit</p>
+          <p class="card-desc">Repair guides</p>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    BlockSpot — no internet required
+  </div>
+
+</div>
 
 </body>
 </html>

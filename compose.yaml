@@ -38,7 +38,7 @@ services:
       - "127.0.0.1:1200:8080"
     restart: unless-stopped
     volumes:
-      - "C:/Server/kiwix/zim:/data"
+      - "C:/blockspot/data/kiwix:/data"
     command: --urlRootLocation=/kiwix *.zim
 
   mapserver:

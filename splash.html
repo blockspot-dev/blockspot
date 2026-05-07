@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlockSpot WiFi</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; background: #f0f4f8; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .card { background: white; border-radius: 16px; padding: 40px 32px; max-width: 420px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; }
+  h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 8px; }
+  .tagline { color: #666; font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
+  input[type=submit] { background: #2563eb; color: white; border: none; padding: 14px 40px; font-size: 17px; border-radius: 10px; cursor: pointer; width: 100%; margin-bottom: 24px; }
+  input[type=submit]:active { background: #1d4ed8; }
+  .notice { background: #fff8e1; border: 1px solid #f59e0b; border-radius: 10px; padding: 16px; text-align: left; margin: 30px 0px; }
+  .notice-title { font-weight: bold; color: #b45309; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .notice p { color: #444; font-size: 15px; line-height: 1.5; }
+  .notice a { color: #2563eb; font-weight: bold; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>BlockSpot WiFi</h1>
+  <p class="tagline">A self-hosted neighborhood hotspot</p>
+	<div class="notice">
+    <div class="notice-title">⚠ Important</div>
+    <p>After connecting, open your browser and go to <a href="http://blockspot.local">blockspot.local</a> to access all resources.</p>
+  </div>
+  <form method="get" action="$authaction">
+    <input type="hidden" name="tok" value="$tok">
+    <input type="hidden" name="redir" value="http://blockspot.local">
+    <input type="submit" value="Connect">
+  </form>
+</div>
+</body>
+</html>
