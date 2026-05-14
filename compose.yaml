@@ -1,7 +1,6 @@
 name: blockspot
 
 services:
-
   caddy:
     container_name: caddy
     image: caddy:latest
@@ -47,9 +46,52 @@ services:
     ports:
       - "127.0.0.1:1300:8080"
     volumes:
-      - "C:/server/data/mapserver:/data"
+      - "C:/blockspot/data/mapserver:/data"
     command: ["--mbtiles", "osm-2020-02-10-v3.11_north-america_us-northeast.mbtiles", "--public_url", "http://192.168.8.211/mapserver/"]
     restart: unless-stopped
+
+  osrm:
+    container_name: osrm
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    ports:
+      - "127.0.0.1:1400:5000"
+    volumes:
+      - "C:/blockspot/data/osrm:/data"
+    command: osrm-routed --algorithm ch /data/us-northeast-latest.osrm
+    restart: unless-stopped
+
+  geo-search:
+    container_name: geo-search
+    image: python:3.12-slim
+    ports:
+      - "127.0.0.1:1500:5000"
+    working_dir: /app
+    volumes:
+      - "C:/blockspot/data/geo-search:/app"
+    command: >
+      sh -c "
+      pip install fastapi uvicorn sqlite-utils &&
+      uvicorn app:app --host 0.0.0.0 --port 5000
+      "
+    restart: unless-stopped
+
+  geo-import:
+    container_name: geo-import
+    image: python:3.12-slim
+
+    working_dir: /app
+
+    volumes:
+      - "C:/blockspot/data/geo-search:/app"
+      - "C:/blockspot/data/osm:/data"
+
+    command: >
+      sh -c "
+      apt-get update &&
+      apt-get install -y libexpat1 &&
+      pip install osmium &&
+      python import_osm.py
+      "
 
 volumes:
   caddy_data:

@@ -20,6 +20,7 @@ http://192.168.8.211, http://blockspot.local {
     handle /connecttest.txt {
         redir http://blockspot.local 302
     }
+
     handle /mapserver {
         root * /srv
         rewrite * /mapserver/index.html
@@ -34,8 +35,18 @@ http://192.168.8.211, http://blockspot.local {
         uri strip_prefix /mapserver
         reverse_proxy mapserver:8080
     }
+    handle /osrm/* {
+        uri strip_prefix /osrm
+        reverse_proxy osrm:5000
+    }
     handle /kiwix/* {
         reverse_proxy kiwix:8080
+    }
+    handle /geo* {
+        reverse_proxy geo-search:5000
+    }
+    handle /geocode* {
+        reverse_proxy nominatim:8080
     }
     handle {
         root * /srv

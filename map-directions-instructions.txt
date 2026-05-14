@@ -1,0 +1,11 @@
+
+
+
+Installing directions
+--
+
+1. Go to https://download.geofabrik.de/north-america/us-northeast.html and download us-northeast-latest.osm.pbf
+2. Move us-northeast-latest.osm.pbf to C:\blockspot\data\osrm and rename to us-northeast-latest.osm.pbf
+3. in cmd, run 
+
+docker run -t -v "C:/blockspot/data/osrm:/data" ghcr.io/project-osrm/osrm-backend osrm-extract -p /opt/car.lua /data/us-northeast-latest.osm.pbf

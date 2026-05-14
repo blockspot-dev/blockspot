@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="maplibre-gl.css" rel="stylesheet" />
+  <script src="maplibre-gl.js"></script>
+  <style>
+    body { margin: 0; }
+    #map { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: 'http://192.168.8.211/mapserver/styles/basic-preview/style.json',
+      center: [-71.06, 42.36], // adjust to your region
+      zoom: 12
+    });
+
+map.on('load', () => {
+
+  // DON'T addLayer - just update the existing poi_label layer from your style
+  
+  // Show more than just rank 1
+  map.setFilter('poi_label', ['<=', 'rank', 5]);
+
+map.on('zoom', () => {
+  const zoom = map.getZoom();
+  let maxRank;
+  
+  if (zoom >= 17)      maxRank = 999;  // show everything
+  else if (zoom >= 16) maxRank = 50;
+  else if (zoom >= 15) maxRank = 20;
+  else if (zoom >= 14) maxRank = 10;
+  else                 maxRank = 3;
+
+  map.setFilter('poi_label', ['all',
+    ['==', '$type', 'Point'],
+    ['<=', 'rank', maxRank]
+  ]);
+});
+
+  // Click for popup
+  map.on('click', 'poi_label', (e) => {
+    const props = e.features[0].properties;
+    new maplibregl.Popup()
+      .setLngLat(e.lngLat)
+      .setHTML(`<strong>${props.name}</strong><br>${props.subclass || props.class || ''}`)
+      .addTo(map);
+  });
+
+  map.on('mouseenter', 'poi_label', () => map.getCanvas().style.cursor = 'pointer');
+  map.on('mouseleave', 'poi_label', () => map.getCanvas().style.cursor = '');
+
+});
+
+
+  </script>
+</body>
+</html>

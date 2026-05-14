@@ -1,0 +1,230 @@
+ * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #0f1117;
+      color: #f0f0f0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #map {
+      flex: 1;
+      width: 100%;
+    }
+
+    #panel {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 380px;
+    }
+
+    .input-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 10px 12px;
+      z-index: 20;
+    }
+
+    .input-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-start { background: #22c55e; }
+    .dot-end { background: #ef4444; }
+
+    .input-row input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #f0f0f0;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .input-row input::placeholder {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(15,17,23,0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    .autocomplete-dropdown.active {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .autocomplete-item:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .autocomplete-item-name {
+      font-size: 14px;
+      color: #f0f0f0;
+      font-weight: 500;
+    }
+
+    .autocomplete-item-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+
+    .btn-route {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-route:hover {
+      background: #1d4ed8;
+    }
+
+    #hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,17,23,0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    #directions {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 280px;
+      max-height: calc(100vh - 24px);
+      background: rgba(15,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+      padding: 14px;
+    }
+
+    #directions h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .dir-summary {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .dir-stat {
+      flex: 1;
+      text-align: center;
+    }
+
+    .dir-stat-val {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2563eb;
+    }
+
+    .dir-stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+
+    .dir-step {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .dir-step-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    .dir-step-dist {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 2px;
+    }
+
+    .btn-clear {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.5);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 8px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
