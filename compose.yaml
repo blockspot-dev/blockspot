@@ -24,7 +24,7 @@ services:
       - "127.0.0.1:8053:80/tcp"
     environment:
       TZ: 'America/New_York'
-      WEBPASSWORD: ''
+      WEBPASSWORD: 'lxBfqgC3We9J57'
     volumes:
       - pihole_data:/etc/pihole
       - pihole_dnsmasq:/etc/dnsmasq.d

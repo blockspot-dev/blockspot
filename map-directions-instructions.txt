@@ -8,4 +8,4 @@ Installing directions
 2. Move us-northeast-latest.osm.pbf to C:\blockspot\data\osrm and rename to us-northeast-latest.osm.pbf
 3. in cmd, run 
 
-docker run -t -v "C:/blockspot/data/osrm:/data" ghcr.io/project-osrm/osrm-backend osrm-extract -p /opt/car.lua /data/us-northeast-latest.osm.pbf
+docker run -t -v "C:/blockspot/data/osrm:/data" ghcr.io/project-osrm/osrm-backend osrm-extract -ddp /opt/car.lua /data/us-northeast-latest.osm.pbf

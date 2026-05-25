@@ -1,4 +1,4 @@
-http://192.168.8.211, http://blockspot.local {
+http:// {
     # Captive portal detection - iOS
     handle /hotspot-detect.html {
         redir http://blockspot.local 302
@@ -6,13 +6,23 @@ http://192.168.8.211, http://blockspot.local {
     handle /library/test/success.html {
         redir http://blockspot.local 302
     }
+
+
+
     # Captive portal detection - Android/Chrome
     handle /generate_204 {
-        redir http://blockspot.local 302
+    	respond "" 204
     }
     handle /gen_204 {
-        redir http://blockspot.local 302
+	respond "" 204
     }
+
+
+
+
+
+
+
     # Captive portal detection - Windows
     handle /ncsi.txt {
         redir http://blockspot.local 302

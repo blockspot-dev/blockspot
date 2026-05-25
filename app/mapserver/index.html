@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
   <title>BlockSpot Maps</title>
 
   <link href="maplibre-gl.css" rel="stylesheet" />
   <script src="maplibre-gl.js"></script>
 
   <style>
-  
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -18,7 +20,7 @@
     }
 
     body {
-      font-family: 'DM Sans', system-ui, sans-serif;
+      font-family: "DM Sans", system-ui, sans-serif;
       background: #0f1117;
       color: #f0f0f0;
       height: 100vh;
@@ -32,29 +34,51 @@
       width: 100%;
     }
 
+    /* =========================================
+       SEARCH PANEL
+    ========================================= */
+
     #panel {
       position: absolute;
       top: 12px;
       left: 12px;
       right: 12px;
-      z-index: 10;
+      z-index: 20;
+
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-width: 380px;
+
+      max-width: 420px;
+    }
+
+    .panel-inner {
+      display: flex;
+      gap: 8px;
+    }
+
+    .inputs {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .input-row {
       position: relative;
+
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(15,17,23,0.92);
+
+      background: rgba(15, 17, 23, 0.92);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
+
       padding: 10px 12px;
-      z-index: 20;
     }
 
     .input-dot {
@@ -64,36 +88,93 @@
       flex-shrink: 0;
     }
 
-    .dot-start { background: #22c55e; }
-    .dot-end { background: #ef4444; }
+    .dot-start {
+      background: #22c55e;
+    }
+
+    .dot-end {
+      background: #ef4444;
+    }
 
     .input-row input {
       flex: 1;
+
       background: none;
       border: none;
       outline: none;
+
       color: #f0f0f0;
       font-size: 14px;
       font-family: inherit;
     }
 
     .input-row input::placeholder {
-      color: rgba(255,255,255,0.35);
+      color: rgba(255, 255, 255, 0.35);
     }
+
+    .btn-search {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+
+      color: #f0f0f0;
+
+      padding: 7px 10px;
+
+      font-size: 12px;
+      font-family: inherit;
+
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .btn-search:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-route {
+      background: #2563eb;
+      color: white;
+
+      border: none;
+      border-radius: 10px;
+
+      padding: 11px 18px;
+
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 500;
+
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-route:hover {
+      background: #1d4ed8;
+    }
+
+    /* =========================================
+       AUTOCOMPLETE
+    ========================================= */
 
     .autocomplete-dropdown {
       position: absolute;
       top: 100%;
       left: 0;
       right: 0;
-      background: rgba(15,17,23,0.95);
+
+      background: rgba(15, 17, 23, 0.96);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-top: none;
       border-radius: 0 0 12px 12px;
-      max-height: 300px;
+
+      max-height: 260px;
       overflow-y: auto;
+
       z-index: 1000;
+
       display: none;
     }
 
@@ -103,13 +184,14 @@
 
     .autocomplete-item {
       padding: 10px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
       cursor: pointer;
       transition: background 0.15s;
     }
 
     .autocomplete-item:hover {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .autocomplete-item-name {
@@ -120,75 +202,83 @@
 
     .autocomplete-item-meta {
       font-size: 12px;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255, 255, 255, 0.4);
       margin-top: 2px;
     }
 
-    .btn-route {
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 11px 18px;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .btn-route:hover {
-      background: #1d4ed8;
-    }
+    /* =========================================
+       HINT
+    ========================================= */
 
     #hint {
       position: absolute;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(15,17,23,0.88);
+
+      background: rgba(15, 17, 23, 0.88);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
+
       padding: 8px 18px;
+
       font-size: 13px;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
+
       white-space: nowrap;
+
       z-index: 10;
       pointer-events: none;
     }
+
+    /* =========================================
+       DIRECTIONS PANEL
+    ========================================= */
 
     #directions {
       position: absolute;
       top: 12px;
       right: 12px;
-      width: 280px;
+
+      width: 320px;
       max-height: calc(100vh - 24px);
-      background: rgba(15,17,23,0.92);
+
+      background: rgba(15, 17, 23, 0.92);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
+
       overflow-y: auto;
-      z-index: 10;
+
+      z-index: 15;
       display: none;
+
       padding: 14px;
     }
 
     #directions h3 {
       font-size: 13px;
       font-weight: 600;
-      color: rgba(255,255,255,0.5);
+
+      color: rgba(255, 255, 255, 0.5);
+
       text-transform: uppercase;
       letter-spacing: 0.06em;
+
       margin-bottom: 12px;
     }
 
     .dir-summary {
       display: flex;
       gap: 12px;
+
       margin-bottom: 14px;
       padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .dir-stat {
@@ -204,18 +294,22 @@
 
     .dir-stat-label {
       font-size: 11px;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255, 255, 255, 0.4);
       margin-top: 2px;
     }
 
     .dir-step {
       display: flex;
       gap: 10px;
+
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
       font-size: 13px;
       line-height: 1.4;
-      color: rgba(255,255,255,0.75);
+
+      color: rgba(255, 255, 255, 0.75);
     }
 
     .dir-step-icon {
@@ -225,662 +319,812 @@
 
     .dir-step-dist {
       font-size: 11px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255, 255, 255, 0.35);
       margin-top: 2px;
     }
 
     .btn-clear {
       width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      color: rgba(255,255,255,0.5);
+
+      color: rgba(255, 255, 255, 0.5);
+
       font-family: inherit;
       font-size: 13px;
+
       padding: 8px;
+
       cursor: pointer;
       margin-top: 12px;
     }
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 768px) {
+      #panel {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        max-width: none;
+      }
+
+      .panel-inner {
+        flex-direction: column;
+      }
+
+      .btn-route {
+        width: 100%;
+      }
+
+      #directions {
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%;
+        max-height: 42vh;
+
+        border-radius: 18px 18px 0 0;
+
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
+
+        background: rgba(15, 17, 23, 0.96);
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+      }
+
+      #directions::before {
+        content: "";
+
+        display: block;
+
+        width: 42px;
+        height: 5px;
+
+        border-radius: 999px;
+
+        background: rgba(255, 255, 255, 0.2);
+
+        margin: 0 auto 14px auto;
+      }
+
+      #hint {
+        bottom: 90px;
+        max-width: calc(100vw - 40px);
+
+        white-space: normal;
+        text-align: center;
+      }
+    }
   </style>
 </head>
+
 <body>
+  <div id="panel">
+    <div class="panel-inner">
 
-<div id="panel">
+      <div class="inputs">
 
-  <div style="display:flex; gap:8px;">
+        <div class="input-row">
+          <div class="input-dot dot-start"></div>
 
-    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+          <input
+            id="input-start"
+            type="text"
+            placeholder="Getting current location..."
+            autocomplete="off"
+          />
 
-      <!-- START -->
-      <div class="input-row">
-        <div class="input-dot dot-start"></div>
+          <button
+            class="btn-search"
+            onclick="searchLocation('input-start')"
+          >
+            Search
+          </button>
 
-        <input
-          id="input-start"
-          type="text"
-          placeholder="Getting current location..."
-          autocomplete="off"
-        >
+          <div
+            id="dropdown-start"
+            class="autocomplete-dropdown"
+          ></div>
+        </div>
 
-        <div id="dropdown-start" class="autocomplete-dropdown"></div>
+        <div class="input-row">
+          <div class="input-dot dot-end"></div>
+
+          <input
+            id="input-end"
+            type="text"
+            placeholder="Destination — or tap map"
+            autocomplete="off"
+          />
+
+          <button
+            class="btn-search"
+            onclick="searchLocation('input-end')"
+          >
+            Search
+          </button>
+
+          <div
+            id="dropdown-end"
+            class="autocomplete-dropdown"
+          ></div>
+        </div>
       </div>
 
-      <!-- END -->
-      <div class="input-row">
-        <div class="input-dot dot-end"></div>
+      <button
+        class="btn-route"
+        onclick="getRoute()"
+      >
+        Go
+      </button>
+    </div>
+  </div>
 
-        <input
-          id="input-end"
-          type="text"
-          placeholder="Destination — or tap map"
-          autocomplete="off"
-        >
+  <div id="directions">
+    <h3>Directions</h3>
 
-        <div id="dropdown-end" class="autocomplete-dropdown"></div>
+    <div class="dir-summary">
+      <div class="dir-stat">
+        <div class="dir-stat-val" id="dir-duration">—</div>
+        <div class="dir-stat-label">minutes</div>
       </div>
 
+      <div class="dir-stat">
+        <div class="dir-stat-val" id="dir-distance">—</div>
+        <div class="dir-stat-label">miles</div>
+      </div>
     </div>
 
-    <button class="btn-route" onclick="getRoute()">Go</button>
+    <div id="dir-steps"></div>
 
+    <button
+      class="btn-clear"
+      onclick="clearRoute()"
+    >
+      ✕ Clear route
+    </button>
   </div>
 
-</div>
-
-<div id="directions">
-
-  <h3>Directions</h3>
-
-  <div class="dir-summary">
-    <div class="dir-stat">
-      <div class="dir-stat-val" id="dir-duration">—</div>
-      <div class="dir-stat-label">minutes</div>
-    </div>
-
-    <div class="dir-stat">
-      <div class="dir-stat-val" id="dir-distance">—</div>
-      <div class="dir-stat-label">miles</div>
-    </div>
+  <div id="hint">
+    Getting your current location...
   </div>
 
-  <div id="dir-steps"></div>
+  <div id="map"></div>
 
-  <button class="btn-clear" onclick="clearRoute()">
-    ✕ Clear route
-  </button>
+  <script>
+    console.log("script loaded");
 
-</div>
+    const DEFAULT_START = [-71.485015, 42.96949];
 
-<div id="hint">Getting your current location...</div>
-
-<div id="map"></div>
-
-<script>
-
-const DEFAULT_START = [-71.485015, 42.969490];
-
-const map = new maplibregl.Map({
-  container: 'map',
-  style: 'http://192.168.8.211/mapserver/styles/basic-preview/style.json',
-  center: DEFAULT_START,
-  zoom: 15
-});
-
-map.addControl(
-  new maplibregl.NavigationControl(),
-  'bottom-right'
-);
-
-map.addControl(
-  new maplibregl.GeolocateControl({
-    positionOptions: {
-      enableHighAccuracy: true
-    },
-    trackUserLocation: true
-  }),
-  'bottom-right'
-);
-
-let startCoord = null;
-let endCoord = null;
-
-let startMarker = null;
-let endMarker = null;
-
-let selectedSuggestion = null;
-
-const hint = document.getElementById('hint');
-
-function makeMarker(color) {
-  const el = document.createElement('div');
-
-  el.style.cssText = `
-    width:14px;
-    height:14px;
-    border-radius:50%;
-    background:${color};
-    border:2.5px solid white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.4);
-  `;
-
-  return el;
-}
-
-/* =========================================================
-   OFFLINE GPS START LOCATION
-========================================================= */
-
-navigator.geolocation.getCurrentPosition(
-
-  (pos) => {
-
-    const lng = pos.coords.longitude;
-    const lat = pos.coords.latitude;
-
-    startCoord = [lng, lat];
-
-    document.getElementById('input-start').value =
-      `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-
-    startMarker = new maplibregl.Marker({
-      element: makeMarker('#22c55e')
-    })
-      .setLngLat(startCoord)
-      .addTo(map);
-
-    map.flyTo({
-      center: startCoord,
+    const map = new maplibregl.Map({
+      container: "map",
+      style:
+        "http://192.168.8.211/mapserver/styles/basic-preview/style.json",
+      center: DEFAULT_START,
       zoom: 15
     });
 
-    hint.textContent =
-      'Search or tap map for destination';
-  },
-
-  (err) => {
-
-    console.error('GPS error:', err);
-
-    startCoord = DEFAULT_START;
-
-    document.getElementById('input-start').value =
-      `${DEFAULT_START[1]}, ${DEFAULT_START[0]}`;
-
-    startMarker = new maplibregl.Marker({
-      element: makeMarker('#22c55e')
-    })
-      .setLngLat(startCoord)
-      .addTo(map);
-
-    hint.textContent =
-      'GPS unavailable — using default start';
-  },
-
-  {
-    enableHighAccuracy: true,
-    timeout: 10000,
-    maximumAge: 30000
-  }
-);
-
-/* =========================================================
-   DISTANCE
-========================================================= */
-
-function calcDistance(lat1, lon1, lat2, lon2) {
-
-  const R = 3959;
-
-  const dLat =
-    (lat2 - lat1) * Math.PI / 180;
-
-  const dLon =
-    (lon2 - lon1) * Math.PI / 180;
-
-  const a =
-    Math.sin(dLat / 2) *
-    Math.sin(dLat / 2) +
-
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-
-  const c =
-    2 * Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1 - a)
+    map.addControl(
+      new maplibregl.NavigationControl(),
+      "bottom-right"
     );
 
-  return R * c;
-}
-
-/* =========================================================
-   GEOCODE
-========================================================= */
-
-async function geocode(query) {
-
-  try {
-
-    const res = await fetch(
-      `/geo?q=${encodeURIComponent(query)}&limit=20`,
-      {
-        signal: AbortSignal.timeout(3000)
-      }
+    map.addControl(
+      new maplibregl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        trackUserLocation: true
+      }),
+      "bottom-right"
     );
 
-    if (!res.ok) return [];
+    let startCoord = null;
+    let endCoord = null;
 
-    const results = await res.json();
+    let startMarker = null;
+    let endMarker = null;
 
-    const center = map.getCenter();
+    let selectedSuggestion = null;
 
-    const withDistance = results.map(item => {
+    const hint = document.getElementById("hint");
 
-      const distance = calcDistance(
-        center.lat,
-        center.lng,
-        item.lat,
-        item.lon
-      );
+    /* =========================================
+       MARKERS
+    ========================================= */
 
-      return {
-        name: item.name,
-        lng: item.lon,
-        lat: item.lat,
-        type: item.type || 'Location',
-        distance
-      };
+    function makeMarker(color) {
+      const el = document.createElement("div");
 
-    });
-
-    withDistance.sort(
-      (a, b) => a.distance - b.distance
-    );
-
-    return withDistance.slice(0, 8);
-
-  } catch (e) {
-
-    console.log('Search failed:', e.message);
-
-    return [];
-  }
-}
-
-/* =========================================================
-   AUTOCOMPLETE
-========================================================= */
-
-function escapeHtml(text) {
-
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-
-  return text.replace(
-    /[&<>"']/g,
-    m => map[m]
-  );
-}
-
-async function showSuggestions(query, inputId) {
-
-  const dropdown =
-    document.getElementById(
-      inputId === 'input-start'
-        ? 'dropdown-start'
-        : 'dropdown-end'
-    );
-
-  if (query.length < 2) {
-
-    dropdown.classList.remove('active');
-
-    return;
-  }
-
-  const results = await geocode(query);
-
-  if (!results.length) {
-
-    dropdown.innerHTML =
-      '<div class="autocomplete-item">No results found</div>';
-
-    dropdown.classList.add('active');
-
-    return;
-  }
-
-  dropdown.innerHTML = results.map((item, idx) => `
-
-    <div
-      class="autocomplete-item"
-      onclick="selectSuggestion(${idx}, '${inputId}')"
-    >
-
-      <div class="autocomplete-item-name">
-        ${escapeHtml(item.name)}
-      </div>
-
-      <div class="autocomplete-item-meta">
-        ${item.type} • ${item.distance.toFixed(1)} mi
-      </div>
-
-    </div>
-
-  `).join('');
-
-  dropdown.classList.add('active');
-
-  selectedSuggestion = {
-    results,
-    inputId
-  };
-}
-
-function selectSuggestion(idx, inputId) {
-
-  if (
-    !selectedSuggestion ||
-    !selectedSuggestion.results[idx]
-  ) return;
-
-  const item =
-    selectedSuggestion.results[idx];
-
-  const coord = [item.lng, item.lat];
-
-  const input =
-    document.getElementById(inputId);
-
-  const dropdown =
-    document.getElementById(
-      inputId === 'input-start'
-        ? 'dropdown-start'
-        : 'dropdown-end'
-    );
-
-  input.value = item.name;
-
-  dropdown.classList.remove('active');
-
-  if (inputId === 'input-start') {
-
-    startCoord = coord;
-
-    if (startMarker)
-      startMarker.remove();
-
-    startMarker =
-      new maplibregl.Marker({
-        element: makeMarker('#22c55e')
-      })
-        .setLngLat(coord)
-        .addTo(map);
-
-  } else {
-
-    endCoord = coord;
-
-    if (endMarker)
-      endMarker.remove();
-
-    endMarker =
-      new maplibregl.Marker({
-        element: makeMarker('#ef4444')
-      })
-        .setLngLat(coord)
-        .addTo(map);
-
-    getRoute();
-  }
-}
-
-document.getElementById('input-start')
-  .addEventListener('input', (e) => {
-    showSuggestions(
-      e.target.value,
-      'input-start'
-    );
-  });
-
-document.getElementById('input-end')
-  .addEventListener('input', (e) => {
-    showSuggestions(
-      e.target.value,
-      'input-end'
-    );
-  });
-
-document.addEventListener('click', (e) => {
-
-  if (!e.target.closest('.input-row')) {
-
-    document.getElementById('dropdown-start')
-      .classList.remove('active');
-
-    document.getElementById('dropdown-end')
-      .classList.remove('active');
-  }
-});
-
-/* =========================================================
-   MAP CLICK
-========================================================= */
-
-map.on('click', (e) => {
-
-  endCoord = [
-    e.lngLat.lng,
-    e.lngLat.lat
-  ];
-
-  document.getElementById('input-end').value =
-    `${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}`;
-
-  if (endMarker)
-    endMarker.remove();
-
-  endMarker =
-    new maplibregl.Marker({
-      element: makeMarker('#ef4444')
-    })
-      .setLngLat(endCoord)
-      .addTo(map);
-
-  getRoute();
-});
-
-/* =========================================================
-   FORMATTING
-========================================================= */
-
-function formatDist(meters) {
-
-  const miles =
-    meters / 1609.34;
-
-  return miles < 0.1
-    ? `${Math.round(meters)}m`
-    : `${miles.toFixed(1)} mi`;
-}
-
-function formatDuration(seconds) {
-
-  const m =
-    Math.round(seconds / 60);
-
-  if (m < 60) return m;
-
-  return `${Math.floor(m / 60)}h ${m % 60}m`;
-}
-
-/* =========================================================
-   ROUTING
-========================================================= */
-
-async function getRoute() {
-
-  if (!startCoord || !endCoord)
-    return;
-
-  const url =
-    `/osrm/route/v1/driving/` +
-    `${startCoord[0]},${startCoord[1]};` +
-    `${endCoord[0]},${endCoord[1]}` +
-    `?steps=true&geometries=geojson&overview=full`;
-
-  try {
-
-    const res =
-      await fetch(url);
-
-    const data =
-      await res.json();
-
-    if (data.code !== 'Ok') {
-
-      alert('No route found');
-
-      return;
-    }
-
-    const route =
-      data.routes[0];
-
-    if (map.getLayer('route'))
-      map.removeLayer('route');
-
-    if (map.getSource('route'))
-      map.removeSource('route');
-
-    map.addSource('route', {
-      type: 'geojson',
-      data: {
-        type: 'Feature',
-        geometry: route.geometry
-      }
-    });
-
-    map.addLayer({
-      id: 'route',
-      type: 'line',
-      source: 'route',
-
-      layout: {
-        'line-join': 'round',
-        'line-cap': 'round'
-      },
-
-      paint: {
-        'line-color': '#2563eb',
-        'line-width': 5,
-        'line-opacity': 0.85
-      }
-    });
-
-    const coords =
-      route.geometry.coordinates;
-
-    const bounds =
-      coords.reduce(
-        (b, c) => b.extend(c),
-        new maplibregl.LngLatBounds(
-          coords[0],
-          coords[0]
-        )
-      );
-
-    map.fitBounds(bounds, {
-      padding: 80
-    });
-
-    document.getElementById('dir-duration')
-      .textContent =
-      formatDuration(route.duration);
-
-    document.getElementById('dir-distance')
-      .textContent =
-      (route.distance / 1609.34).toFixed(1);
-
-    const stepsEl =
-      document.getElementById('dir-steps');
-
-    stepsEl.innerHTML = '';
-
-    route.legs[0].steps.forEach(step => {
-
-      const div =
-        document.createElement('div');
-
-      div.className =
-        'dir-step';
-
-      div.innerHTML = `
-        <div class="dir-step-icon">↑</div>
-
-        <div>
-          <div>${step.name || 'Unnamed road'}</div>
-
-          <div class="dir-step-dist">
-            ${formatDist(step.distance)}
-          </div>
-        </div>
+      el.style.cssText = `
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: ${color};
+        border: 2.5px solid white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
       `;
 
-      stepsEl.appendChild(div);
+      return el;
+    }
+
+    /* =========================================
+       GEOLOCATION
+    ========================================= */
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lng = pos.coords.longitude;
+        const lat = pos.coords.latitude;
+
+        startCoord = [lng, lat];
+
+        document.getElementById(
+          "input-start"
+        ).value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+        startMarker = new maplibregl.Marker({
+          element: makeMarker("#22c55e")
+        })
+          .setLngLat(startCoord)
+          .addTo(map);
+
+        map.flyTo({
+          center: startCoord,
+          zoom: 15
+        });
+
+        hint.textContent =
+          "Search or tap map for destination";
+      },
+
+      (err) => {
+        console.error("geolocation failed", err);
+
+        startCoord = DEFAULT_START;
+
+        document.getElementById(
+          "input-start"
+        ).value =
+          `${DEFAULT_START[1]}, ${DEFAULT_START[0]}`;
+
+        startMarker = new maplibregl.Marker({
+          element: makeMarker("#22c55e")
+        })
+          .setLngLat(startCoord)
+          .addTo(map);
+
+        hint.textContent =
+          "GPS unavailable — using default start";
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000
+      }
+    );
+
+    /* =========================================
+       DISTANCE
+    ========================================= */
+
+    function calcDistance(lat1, lon1, lat2, lon2) {
+      const R = 3959;
+
+      const dLat =
+        ((lat2 - lat1) * Math.PI) / 180;
+
+      const dLon =
+        ((lon2 - lon1) * Math.PI) / 180;
+
+      const a =
+        Math.sin(dLat / 2) *
+          Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+
+      const c =
+        2 *
+        Math.atan2(
+          Math.sqrt(a),
+          Math.sqrt(1 - a)
+        );
+
+      return R * c;
+    }
+
+    /* =========================================
+       GEOCODE
+    ========================================= */
+
+    async function geocode(query) {
+      try {
+        const center = map.getCenter();
+
+        const res = await fetch(
+          `/geo?q=${encodeURIComponent(query)}&lat=${center.lat}&lon=${center.lng}&limit=20`
+        );
+
+        if (!res.ok) {
+          return [];
+        }
+
+        const results = await res.json();
+
+        return results.map((item) => {
+          const distance = calcDistance(
+            center.lat,
+            center.lng,
+            Number(item.lat),
+            Number(item.lon)
+          );
+
+          const parts = (item.address || "")
+            .split(",")
+            .map((s) => s.trim());
+
+          const street = parts[0] || "";
+          const city =
+            parts.length >= 2 ? parts[1] : "";
+
+          let state = "";
+
+          if (parts.length >= 3) {
+            const third = parts[2];
+
+            if (!/^\d+$/.test(third)) {
+              state = third.split(" ")[0];
+            }
+          }
+
+          return {
+            name: item.name || "Unknown",
+            street,
+            city,
+            state,
+            lng: Number(item.lon),
+            lat: Number(item.lat),
+            type: item.type || "Location",
+            distance
+          };
+        });
+      } catch (e) {
+        console.error("Search failed:", e);
+        return [];
+      }
+    }
+
+    /* =========================================
+       AUTOCOMPLETE
+    ========================================= */
+
+    function escapeHtml(text = "") {
+      const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+
+      return text.replace(
+        /[&<>"']/g,
+        (m) => map[m]
+      );
+    }
+
+    async function searchLocation(inputId) {
+      const input =
+        document.getElementById(inputId);
+
+      const query = input.value.trim();
+
+      if (!query) return;
+
+      input.disabled = true;
+
+      const original = input.value;
+
+      input.value = "Searching...";
+
+      await showSuggestions(query, inputId);
+
+      input.disabled = false;
+
+      input.value = original;
+    }
+
+    async function showSuggestions(
+      query,
+      inputId
+    ) {
+      const dropdown =
+        document.getElementById(
+          inputId === "input-start"
+            ? "dropdown-start"
+            : "dropdown-end"
+        );
+
+      const results = await geocode(query);
+
+      if (!results.length) {
+        dropdown.innerHTML = `
+          <div class="autocomplete-item">
+            No results found
+          </div>
+        `;
+
+        dropdown.classList.add("active");
+        return;
+      }
+
+      dropdown.innerHTML = results
+        .map(
+          (item, idx) => `
+          <div
+            class="autocomplete-item"
+            onclick="selectSuggestion(${idx}, '${inputId}')"
+          >
+            <div class="autocomplete-item-name">
+              ${escapeHtml(item.name)}
+            </div>
+
+            <div class="autocomplete-item-meta">
+              ${[
+                item.street,
+                item.city,
+                item.state
+              ]
+                .filter(Boolean)
+                .join(" • ")}
+
+              ${
+                item.distance
+                  ? ` • ${item.distance.toFixed(1)} mi`
+                  : ""
+              }
+            </div>
+          </div>
+        `
+        )
+        .join("");
+
+      dropdown.classList.add("active");
+
+      selectedSuggestion = {
+        results,
+        inputId
+      };
+    }
+
+    function selectSuggestion(idx, inputId) {
+      if (
+        !selectedSuggestion ||
+        !selectedSuggestion.results[idx]
+      ) {
+        return;
+      }
+
+      const item =
+        selectedSuggestion.results[idx];
+
+      const coord = [item.lng, item.lat];
+
+      const input =
+        document.getElementById(inputId);
+
+      const dropdown =
+        document.getElementById(
+          inputId === "input-start"
+            ? "dropdown-start"
+            : "dropdown-end"
+        );
+
+      input.value = item.name;
+
+      dropdown.classList.remove("active");
+
+      if (inputId === "input-start") {
+        startCoord = coord;
+
+        if (startMarker) {
+          startMarker.remove();
+        }
+
+        startMarker =
+          new maplibregl.Marker({
+            element: makeMarker("#22c55e")
+          })
+            .setLngLat(coord)
+            .addTo(map);
+      } else {
+        endCoord = coord;
+
+        if (endMarker) {
+          endMarker.remove();
+        }
+
+        endMarker =
+          new maplibregl.Marker({
+            element: makeMarker("#ef4444")
+          })
+            .setLngLat(coord)
+            .addTo(map);
+
+        getRoute();
+      }
+    }
+
+    /* =========================================
+       ENTER KEY
+    ========================================= */
+
+    ["input-start", "input-end"].forEach(
+      (id) => {
+        document
+          .getElementById(id)
+          .addEventListener(
+            "keydown",
+            (e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchLocation(id);
+              }
+            }
+          );
+      }
+    );
+
+    document.addEventListener(
+      "click",
+      (e) => {
+        if (!e.target.closest(".input-row")) {
+          document
+            .getElementById("dropdown-start")
+            .classList.remove("active");
+
+          document
+            .getElementById("dropdown-end")
+            .classList.remove("active");
+        }
+      }
+    );
+
+    /* =========================================
+       MAP CLICK
+    ========================================= */
+
+    map.on("click", (e) => {
+      endCoord = [
+        e.lngLat.lng,
+        e.lngLat.lat
+      ];
+
+      document.getElementById(
+        "input-end"
+      ).value =
+        `${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}`;
+
+      if (endMarker) {
+        endMarker.remove();
+      }
+
+      endMarker = new maplibregl.Marker({
+        element: makeMarker("#ef4444")
+      })
+        .setLngLat(endCoord)
+        .addTo(map);
+
+      getRoute();
     });
 
-    document.getElementById('directions')
-      .style.display = 'block';
+    /* =========================================
+       FORMATTERS
+    ========================================= */
 
-  } catch (err) {
+    function formatDist(meters) {
+      const miles = meters / 1609.34;
 
-    alert(
-      'Routing error: ' + err.message
-    );
-  }
-}
+      return miles < 0.1
+        ? `${Math.round(meters)}m`
+        : `${miles.toFixed(1)} mi`;
+    }
 
-/* =========================================================
-   CLEAR
-========================================================= */
+    function formatDuration(seconds) {
+      const m = Math.round(seconds / 60);
 
-function clearRoute() {
+      if (m < 60) {
+        return `${m} min`;
+      }
 
-  if (map.getLayer('route'))
-    map.removeLayer('route');
+      return `${Math.floor(m / 60)}h ${m % 60}m`;
+    }
 
-  if (map.getSource('route'))
-    map.removeSource('route');
+    /* =========================================
+       ROUTING
+    ========================================= */
 
-  if (endMarker) {
+    async function getRoute() {
+      if (!startCoord || !endCoord) {
+        return;
+      }
 
-    endMarker.remove();
+      const url =
+        `/osrm/route/v1/driving/` +
+        `${startCoord[0]},${startCoord[1]};` +
+        `${endCoord[0]},${endCoord[1]}` +
+        `?steps=true&geometries=geojson&overview=full`;
 
-    endMarker = null;
-  }
+      try {
+        const res = await fetch(url);
 
-  endCoord = null;
+        const data = await res.json();
 
-  document.getElementById('input-end')
-    .value = '';
+        if (data.code !== "Ok") {
+          alert("No route found");
+          return;
+        }
 
-  document.getElementById('directions')
-    .style.display = 'none';
+        const route = data.routes[0];
 
-  hint.textContent =
-    'Search or tap map for destination';
-}
+        if (map.getLayer("route")) {
+          map.removeLayer("route");
+        }
 
-</script>
+        if (map.getSource("route")) {
+          map.removeSource("route");
+        }
 
+        map.addSource("route", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            geometry: route.geometry
+          }
+        });
+
+        map.addLayer({
+          id: "route",
+          type: "line",
+          source: "route",
+
+          layout: {
+            "line-join": "round",
+            "line-cap": "round"
+          },
+
+          paint: {
+            "line-color": "#2563eb",
+            "line-width": 5,
+            "line-opacity": 0.85
+          }
+        });
+
+        const coords =
+          route.geometry.coordinates;
+
+        const bounds = coords.reduce(
+          (b, c) => b.extend(c),
+          new maplibregl.LngLatBounds(
+            coords[0],
+            coords[0]
+          )
+        );
+
+        map.fitBounds(bounds, {
+          padding: {
+            top: 100,
+            left: 60,
+            right: 60,
+            bottom:
+              window.innerWidth <= 768
+                ? 320
+                : 80
+          }
+        });
+
+        document.getElementById(
+          "dir-duration"
+        ).textContent = formatDuration(
+          route.duration
+        );
+
+        document.getElementById(
+          "dir-distance"
+        ).textContent = (
+          route.distance / 1609.34
+        ).toFixed(1);
+
+        const stepsEl =
+          document.getElementById(
+            "dir-steps"
+          );
+
+        stepsEl.innerHTML = "";
+
+        route.legs[0].steps.forEach(
+          (step) => {
+            const div =
+              document.createElement("div");
+
+            div.className = "dir-step";
+
+            div.innerHTML = `
+              <div class="dir-step-icon">
+                ↑
+              </div>
+
+              <div>
+                <div>
+                  ${step.name || "Unnamed road"}
+                </div>
+
+                <div class="dir-step-dist">
+                  ${formatDist(step.distance)}
+                </div>
+              </div>
+            `;
+
+            stepsEl.appendChild(div);
+          }
+        );
+
+        document.getElementById(
+          "directions"
+        ).style.display = "block";
+      } catch (err) {
+        console.error(err);
+
+        alert(
+          "Routing error: " + err.message
+        );
+      }
+    }
+
+    /* =========================================
+       CLEAR
+    ========================================= */
+
+    function clearRoute() {
+      if (map.getLayer("route")) {
+        map.removeLayer("route");
+      }
+
+      if (map.getSource("route")) {
+        map.removeSource("route");
+      }
+
+      if (endMarker) {
+        endMarker.remove();
+        endMarker = null;
+      }
+
+      endCoord = null;
+
+      document.getElementById(
+        "input-end"
+      ).value = "";
+
+      document.getElementById(
+        "directions"
+      ).style.display = "none";
+
+      hint.textContent =
+        "Search or tap map for destination";
+    }
+  </script>
 </body>
 </html>
